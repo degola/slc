@@ -1,5 +1,5 @@
 {
-    "name": "degola/slc",
+    "name": "slc/MVC",
     "description": "Simple and fast PHP MVC framework",
     "keywords": ["mvc"],
     "homepage": "http://github.com/Degola/slc",
@@ -15,6 +15,6 @@
         "php": ">=5.4.0"
     },
     "autoload": {
-        "psr-0": {"slc": "src/"}
+        "psr-0": {"slc/MVC": "src/"}
     }
 }
