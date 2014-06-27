@@ -1,4 +1,0 @@
-slc
-===
-
-PHP MVC Framework
