@@ -1,0 +1,20 @@
+{
+    "name": "slc/MVC",
+    "description": "Simple and fast PHP MVC framework",
+    "keywords": ["mvc"],
+    "homepage": "http://github.com/Degola/slc",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+		{
+			"name": "Sebastian Lagemann",
+			"email": "mail@degola.de"
+		}
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": {"MVC": "src/"}
+    }
+}
