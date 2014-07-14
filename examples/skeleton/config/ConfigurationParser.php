@@ -59,7 +59,7 @@ class ConfigurationParser {
 			if(defined('DEPLOYMENT_STATE')) {
 				$value = preg_replace('/%%DEPLOYMENT_STATE/', DEPLOYMENT_STATE, $value);
 			}
-			if(preg_match_all('/%%CONSTANT_([A-Z0-9]{1,})/', $value, $matches)) {
+			if(preg_match_all('/%%CONSTANT_([A-Z0-9_]{1,})/', $value, $matches)) {
 				foreach($matches[1] AS $constant) {
 					if(defined($constant)) {
 						$value = preg_replace('/%%CONSTANT_' . $constant . '/', $value, constant($constant));

@@ -35,9 +35,22 @@ abstract class Consumer_Beanstalk extends Consumer {
 
 		\slc\MVC\Debug::Write('setting up beanstalkd connection...', null, 1, 1, __CLASS__);
 
-		$this->Beanstalk = \Beanstalk_Provider::Factory(null, $this->getFacilityConfig()->StateCheckProperties->BeanstalkConfigId);
-		\slc\MVC\Debug::Write('listen to tube '.$this->Beanstalk->getTube().'...', null, 0, 1, __CLASS__);
-		$this->Beanstalk->getDriver()->watch($this->Beanstalk->getTube());
+        if(isset($this->StartParameters->Host) && isset($this->StartParameters->Port)) {
+            $this->Beanstalk = new \slc\MVC\Beanstalkd\Driver(
+                array(
+                    'Host' => $this->StartParameters->Host,
+                    'Port' => $this->StartParameters->Port,
+                    'Connections' => isset($this->StartParameters->Connections)?$this->StartParameters->Connections:10
+                )
+            );
+            $tube = $this->getFacilityConfig()->Consumer->BeanstalkTube;
+        } else {
+            $Provider = \Beanstalk_Provider::Factory(null, $this->getFacilityConfig()->StateCheckProperties->BeanstalkConfigId);
+            $this->Beanstalk = $Provider->getDriver();
+            $tube = $this->Beanstalk->getTube();
+        }
+		\slc\MVC\Debug::Write('listen to tube '.$tube.'...', null, 0, 1, __CLASS__);
+		$this->Beanstalk->watch($tube);
 		\slc\MVC\Debug::Write('done.', null, 2, 1, __CLASS__);
 
 	}
