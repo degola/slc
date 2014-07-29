@@ -56,7 +56,7 @@ class Main extends \slc\MVC\Application_Controller {
 		 * if you use Twig as render engine VariableName will be assigned to the template, if you use JSON as render engine
 		 * VariableName is available within the ViewData property of the JSON object
 		 */
-		$this->setRenderEngine('\slc\MVC\RenderEngine\JSON');
+		$this->setRenderEngine('\slc\MVC\RenderEngine_JSON');
 
 		// if an instance of Router_Driver is returned the router will execute the returned route afterwards
 		return new Router_Driver_Redirect(array('View' => 'Main::RedirectedView'));

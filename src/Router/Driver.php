@@ -102,7 +102,7 @@ class Router_Driver {
 		if(is_a($this->Controller, 'stdClass')) {
 			$cls = $this->Controller->Class;
 
-			require $this->Controller->FilePath;
+			require_once $this->Controller->FilePath;
 			if(class_exists($cls, true)) {
 				$this->Controller = new $cls($this);
 				if(!($this->Controller instanceof Application_Controller)) {
