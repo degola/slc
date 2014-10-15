@@ -31,14 +31,17 @@ class Router_Driver_QueryString extends Router_Driver {
 		}
 		return false;
 	}
-	public function link($link, array $arguments = array(), $includeDomain = false) {
+	public function link($link, array $arguments = null, $includeDomain = false) {
+		$prefix = '';
 		if($includeDomain)
 			$prefix = ($_SERVER['SSL']?'https://':'http://').$_SERVER['HOST'];
 		$args = array();
-		foreach($arguments AS $key => $value) {
-			$args[] = urlencode($key).'='.urlencode($value);
+		if(is_array($arguments)) {
+			foreach ($arguments AS $key => $value) {
+				$args[] = urlencode($key) . '=' . urlencode($value);
+			}
 		}
-		return $_SERVER['PHP_SELF'].'?r='.implode(',', explode('::', $link)).(sizeof($arguments)>0?'&'.implode('&', $args):'');
+		return $prefix.$_SERVER['PHP_SELF'].'?r='.implode(',', explode('::', $link)).(sizeof($arguments)>0?'&'.implode('&', $args):'');
 	}
 
 }
