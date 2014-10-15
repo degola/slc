@@ -67,6 +67,7 @@ class Router_Driver {
 		$fnPrefix = Base::Factory()->getConfig('Paths', $prefix);
 		$fnAppendix = Base::Factory()->getConfig('FileExtensions', $prefix);
 		$lastElement = null;
+		$remainingElements = array();
 
 		if(substr($fnPrefix, -1) != DIRECTORY_SEPARATOR) $fnPrefix .= DIRECTORY_SEPARATOR;
 
@@ -75,10 +76,15 @@ class Router_Driver {
 			$fn = $fnPrefix.implode(DIRECTORY_SEPARATOR, $stringArray).$fnAppendix;
 
 			if(file_exists($fn)) {
+				if($lastElement) {
+					array_pop($remainingElements);
+				}
+				rsort($remainingElements);
 				return (object)array(
 					'Class' => $class,
 					'ViewPath' => implode('::', $stringArray),
 					'FilePath' => $fn,
+					'AdditionalViewParameters' => $remainingElements,
 					'View' => (
 						$lastElement?$lastElement:(
 							Base::Factory()->getConfig('Application', 'DefaultView')?Base::Factory()->getConfig('Application', 'DefaultView'):'DefaultView'
@@ -87,6 +93,7 @@ class Router_Driver {
 				);
 			} else {
 				$lastElement = array_pop($stringArray);
+				$remainingElements[] = $lastElement;
 			}
 		}
 		return null;
