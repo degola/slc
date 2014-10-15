@@ -11,7 +11,7 @@
 
 	class Router_Driver_TidyURL extends Router_Driver {
 		protected function parseRoute() {
-			if(preg_match('/^([a-zA-Z0-9\/\-]{1,})(|\?(.*))$/', $this->getQueryString(), $matchResult)) {
+			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $this->getQueryString(), $matchResult)) {
 				$arguments = array_pop($matchResult);
 				$QueryStringArray = array();
 				parse_str($arguments, $QueryStringArray);
