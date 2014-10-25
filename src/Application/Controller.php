@@ -40,6 +40,10 @@ class Application_Controller {
 		return false;
 	}
 
+    protected function cleanAssignments() {
+        $this->ASSIGNMENTS = array();
+    }
+
 	protected function assign($key, $value) {
 		$this->ASSIGNMENTS[$key] = $value;
 	}
