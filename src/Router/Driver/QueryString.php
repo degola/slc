@@ -34,11 +34,13 @@ class Router_Driver_QueryString extends Router_Driver {
 	public function link($link, array $arguments = null, $includeDomain = false) {
 		$prefix = '';
 		if($includeDomain)
-			$prefix = ($_SERVER['SSL']?'https://':'http://').$_SERVER['HOST'];
+			$prefix = (isset($_SERVER['SSL'])||isset($_SERVER['HTTPS'])?'https://':'http://').(isset($_SERVER['HOST'])?$_SERVER['HOST']:$_SERVER['HTTP_HOST']);
 		$args = array();
 		if(is_array($arguments)) {
 			foreach ($arguments AS $key => $value) {
-				$args[] = urlencode($key) . '=' . urlencode($value);
+				if(is_scalar($value)) {
+					$args[] = urlencode($key) . '=' . urlencode($value);
+				}
 			}
 		}
 		return $prefix.$_SERVER['PHP_SELF'].'?r='.implode(',', explode('::', $link)).(sizeof($arguments)>0?'&'.implode('&', $args):'');
