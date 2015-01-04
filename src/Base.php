@@ -65,6 +65,23 @@ class Base {
 		return static::$Configuration->getConfig($type, $key);
 	}
 
+	public function getTempDir($prefix) {
+		$tmpDir = $this->getConfig('Paths', 'TmpDir');
+		if(substr($tmpDir, -1) != '/') {
+			$tmpDir .= '/';
+		}
+		$tmpDir .= $prefix.'/';
+
+		if(!file_exists($tmpDir)) {
+			if(!@mkdir($tmpDir, 0777, true)) {
+				throw new Base_Exception('ACCESS_DENIED_TEMP_DIRECTORY', array('TmpDir' => $tmpDir));
+			}
+		}
+		if(!is_dir($tmpDir)) {
+			throw new Base_Exception('TEMP_DIRECTORY_NOT_A_DIRECTORY', array('TmpDir' => $tmpDir));
+		}
+		return $tmpDir;
+	}
 	public function importFile($list, $force = true) {
 		$loaded = false;
 
