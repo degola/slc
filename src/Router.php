@@ -26,16 +26,16 @@ class Router {
 			'__hasAccess'
 		);
 		if(!preg_match('/^([a-z0-9\_]{1,})$/i', $View->View))
-			throw new Router_Exception(Router_Exception::ACCESS_DENIED_INVALID_VIEW, array('View' => $View->View, 'Controller' => get_class($Controller)));
+			throw new Router_Exception('ACCESS_DENIED_INVALID_VIEW', array('View' => $View->View, 'Controller' => get_class($Controller)));
 
 		if(substr($View->View, 2) == '__')
-			throw new Router_Exception(Router_Exception::ACCESS_DENIED_RESERVED_NAME, array('View' => $View->View, 'Controller' => get_class($Controller)));
+			throw new Router_Exception('ACCESS_DENIED_RESERVED_NAME', array('View' => $View->View, 'Controller' => get_class($Controller)));
 
 		if(in_array($View->View, $ProtectedViews) || (method_exists($Controller, $View->View) && !is_callable(array($Controller, $View->View))))
-			throw new Router_Exception(Router_Exception::ACCESS_DENIED, array('View' => $View->View, 'Controller' => get_class($Controller)));
+			throw new Router_Exception('ACCESS_DENIED', array('View' => $View->View, 'Controller' => get_class($Controller)));
 			
 		if(method_exists($Controller, '__hasAccess') && $Controller->__hasAccess($Driver->getViewArguments()) !== true)
-			throw new Router_Exception(Router_Exception::ACCESS_DENIED_CONTROLLER_HOOK, array('View' => $View->View, 'Controller' => get_class($Controller)));
+			throw new Router_Exception('ACCESS_DENIED_CONTROLLER_HOOK', array('View' => $View->View, 'Controller' => get_class($Controller)));
 
 		return true;
 	}
