@@ -12,10 +12,14 @@ class RenderEngine_JSON extends RenderEngine {
 	}
 	public function Fetch() {
 		$Data = $this->getTemplateValues();
-		$Data = array(
-			'ServerTime' => time(),
-			'ViewData' => $Data,
-			'Signature' => hash($this->SignatureHashAlgo, time().'::'.(!is_null($this->SignatureHashSalt)?$this->SignatureHashSalt.'::':'').json_encode($Data))
+		unset($Data['Router']);
+		unset($Data['Controller']);
+		$Data = array_merge(
+			array(
+				'ServerTime' => time(),
+				'Signature' => hash($this->SignatureHashAlgo, time().'::'.(!is_null($this->SignatureHashSalt)?$this->SignatureHashSalt.'::':'').json_encode($Data))
+			),
+			$Data
 		);
 		return json_encode($Data);
 	}

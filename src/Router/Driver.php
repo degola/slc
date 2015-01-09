@@ -25,7 +25,6 @@ class Router_Driver {
 		if(is_null($Driver)) {
 			$Driver = Base::Factory()->getConfig('Framework', 'DefaultRouterDriver');
 		}
-		Base::Factory()->getConfig('Router', 'DefaultDriver');
 
 		if(is_null($Driver))
 			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_DRIVER, array('Driver' => $Driver, 'QueryString' => $QueryString));

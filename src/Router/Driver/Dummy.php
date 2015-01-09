@@ -14,6 +14,9 @@ class Router_Driver_Dummy extends Router_Driver {
 		$this->StartRoute = $this->getQueryString();
 		if($result = $this->findControllerAndViewByRouteString($this->getQueryString())) {
 			$this->setController($result->FilePath, $result->Class);
+			if(isset($result->AdditionalViewParameters)) {
+				$this->setViewArguments($result->AdditionalViewParameters);
+			}
 			$this->setView((object)array(
 				'View' => $result->View,
 				'Path' => $result->ViewPath
