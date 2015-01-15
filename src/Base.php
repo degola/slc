@@ -65,23 +65,28 @@ class Base {
 		return static::$Configuration->getConfig($type, $key);
 	}
 
-	public function getTempDir($prefix) {
-		$tmpDir = $this->getConfig('Paths', 'TmpDir');
-		if(substr($tmpDir, -1) != '/') {
-			$tmpDir .= '/';
-		}
-		$tmpDir .= $prefix.'/';
+	public function getDir($prefix, $pathElement) {
 
-		if(!file_exists($tmpDir)) {
-			if(!@mkdir($tmpDir, 0777, true)) {
-				throw new Base_Exception('ACCESS_DENIED_TEMP_DIRECTORY', array('TmpDir' => $tmpDir));
+		$dir = $this->getConfig('Paths', $pathElement);
+		if(substr($dir, -1) != '/') {
+			$dir .= '/';
+		}
+		$dir .= $prefix.'/';
+
+		if(!file_exists($dir)) {
+			if(!@mkdir($dir, 0777, true)) {
+				throw new Base_Exception('ACCESS_DENIED_TEMP_DIRECTORY', array($pathElement => $dir));
 			}
 		}
-		if(!is_dir($tmpDir)) {
-			throw new Base_Exception('TEMP_DIRECTORY_NOT_A_DIRECTORY', array('TmpDir' => $tmpDir));
+		if(!is_dir($dir)) {
+			throw new Base_Exception('TEMP_DIRECTORY_NOT_A_DIRECTORY', array($pathElement => $dir));
 		}
-		return $tmpDir;
+		return $dir;
 	}
+	public function getTempDir($prefix) {
+		return $this->getDir($prefix, 'TmpDir');
+	}
+
 	public function importFile($list, $force = true) {
 		$loaded = false;
 
