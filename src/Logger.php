@@ -37,7 +37,6 @@ class Logger extends \Monolog\Logger {
     }
 
     protected function initialize() {
-
 		if(isset($this->ConfigData->Handler)) {
 			foreach($this->ConfigData->Handler AS $Config) {
 				$Config = (object)$Config;
@@ -57,7 +56,7 @@ class Logger extends \Monolog\Logger {
 						break;
 					case 'Graylog':
 						if(isset($Config->Host))
-							$handler = new \Monolog\Handler\GelfHandler(new \Gelf\MessagePublisher($Config->Host), constant('Monolog\Logger::'.$Config->Severity));
+							$handler = new \Monolog\Handler\GelfHandler(new \Gelf\Publisher(new \Gelf\Transport\UdpTransport($Config->Host, isset($Config->Port)?$Config->Port:\Gelf\Transport\UdpTransport::DEFAULT_PORT)), constant('Monolog\Logger::'.$Config->Severity));
 						else throw new Logger_Exception('INVALID_TYPE_CONFIG', array('Type' => $Config->Type));
 						break;
 					default:
