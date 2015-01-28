@@ -9,6 +9,8 @@ class RenderEngine_Shell extends RenderEngine {
 	}
 	public function Fetch() {
 		$Data = $this->getTemplateValues();
+		unset($Data['Router']);
+		unset($Data['Controller']);
 		return 'Shell controller assignments:'."\n".print_r($Data, true);
 	}
 
