@@ -27,27 +27,34 @@ namespace slc\MVC;
 class Logger extends \Monolog\Logger {
     protected static $LogObjects = array();
     protected $ConfigData = null;
-    public function __construct($Facility) {
+    public function __construct($Facility)
+    {
         parent::__construct(DEPLOYMENT_STATE.': '.$Facility);
 
 		$tmp = Base::Factory()->getConfig('Log', DEPLOYMENT_STATE);
-		if($tmp)
+        if($tmp)
         	$this->ConfigData = $tmp->{$Facility}; // (object)Base::getConfigStatic('Log', DEPLOYMENT_STATE, 'Facility', $Facility);
         $this->initialize();
     }
 
-    protected function initialize() {
-		if(isset($this->ConfigData->Handler)) {
+    protected function initialize()
+    {
+        if(isset($this->ConfigData->Handler)) {
 			foreach($this->ConfigData->Handler AS $Config) {
-				$Config = (object)$Config;
-				switch($Config->Type) {
+				$Config = (object) $Config;
+
+                $noProcessors = false;
+                if (isset($Config->NoProcessors) && $Config->NoProcessors) {
+                    $noProcessors = true;
+                }
+                switch($Config->Type) {
 					case 'File':
 						$file_directory = dirname($Config->File);
-						if (!file_exists($file_directory)) {
+                        if (!file_exists($file_directory)) {
 							mkdir($file_directory, 0777, true);
 						}
-						$handler = new \Monolog\Handler\StreamHandler($Config->File);
-						break;
+						$handler = new \Monolog\Handler\StreamHandler($Config->File, $Config->Severity);
+                        break;
 					case 'FirePHP':
 						$handler = new \Monolog\Handler\FirePHPHandler();
 						break;
@@ -63,13 +70,14 @@ class Logger extends \Monolog\Logger {
 						throw new Logger_Exception('INVALID_TYPE', array('Type' => $Config->Type));
 				}
 
-				$this->pushHandler($handler, constant('\Monolog\Logger::'.$Config->Severity));
-
-				$this->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
-				$this->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor());
-				$this->pushProcessor(new \Monolog\Processor\WebProcessor());
-				$this->pushProcessor(new \Monolog\Processor\MemoryPeakUsageProcessor());
-			}
+                $this->pushHandler($handler);
+                if (!$noProcessors) {
+                    $this->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
+                    $this->pushProcessor(new \Monolog\Processor\MemoryUsageProcessor());
+                    $this->pushProcessor(new \Monolog\Processor\WebProcessor());
+                    $this->pushProcessor(new \Monolog\Processor\MemoryPeakUsageProcessor());
+                }
+            }
 		}
     }
 
@@ -80,7 +88,8 @@ class Logger extends \Monolog\Logger {
      * @param $Facility name of the facility
      * @return Logger
      */
-    public static function Factory($Facility) {
+    public static function Factory($Facility)
+    {
         if(!isset(static::$LogObjects[$Facility])) {
             $class = get_called_class();
             static::$LogObjects[$Facility] = new $class($Facility);
