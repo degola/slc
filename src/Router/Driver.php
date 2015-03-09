@@ -15,13 +15,19 @@ class Router_Driver {
 	protected $Controller = null;
 	protected $View = null;
 	protected $ViewArguments = null;
+	protected $Namespace = null;
 
-	public function __construct($QueryString) {
+	public function __construct($QueryString, $Namespace = null) {
 		$this->QueryString = $QueryString;
+		if (is_null($Namespace)) {
+			$this->Namespace = Base::Factory()->getConfig('Application', 'Namespace');
+		} else {
+			$this->Namespace = $Namespace;
+		}
 		if($this->parseRoute() === false)
 			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_ROUTE, array('Driver' => get_called_class(), 'QueryString' => $this->QueryString, 'StartRoute' => $this->StartRoute));
 	}
-	public static function Factory($QueryString, $Driver = null) {
+	public static function Factory($QueryString, $Driver = null, $namespace = null) {
 		if(is_null($Driver)) {
 			$Driver = Base::Factory()->getConfig('Framework', 'DefaultRouterDriver');
 		}
@@ -29,7 +35,7 @@ class Router_Driver {
 		if(is_null($Driver))
 			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_DRIVER, array('Driver' => $Driver, 'QueryString' => $QueryString));
 
-		return new $Driver($QueryString);
+		return new $Driver($QueryString, $namespace);
 	}
 	public function Execute(Router_Driver $Driver) {
 		$Controller = $Driver->getControllerClass();
@@ -58,9 +64,7 @@ class Router_Driver {
 	public function getViewArguments() {
 		return $this->ViewArguments;
 	}
-	protected function findControllerAndViewByRouteString($string, $prefix = 'Controller', $Namespace = null) {
-		if(is_null($Namespace))
-			$Namespace = Base::Factory()->getConfig('Application', 'Namespace');
+	protected function findControllerAndViewByRouteString($string, $prefix = 'Controller') {
 
 		$stringArray = explode('::', $string);
 		$fnPrefix = Base::Factory()->getConfig('Paths', $prefix);
@@ -71,7 +75,7 @@ class Router_Driver {
 		if(substr($fnPrefix, -1) != DIRECTORY_SEPARATOR) $fnPrefix .= DIRECTORY_SEPARATOR;
 
 		while(sizeof($stringArray) > 0) {
-			$class = $Namespace.'\\'.$prefix.'\\'.implode('_', $stringArray);
+			$class = $this->Namespace.'\\'.$prefix.'\\'.implode('_', $stringArray);
 			$fn = $fnPrefix.implode(DIRECTORY_SEPARATOR, $stringArray).$fnAppendix;
 
 			if(file_exists($fn)) {
