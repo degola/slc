@@ -59,6 +59,9 @@ class Application_Controller {
     public final function MergeAssignments(Application_Controller $controller) {
         $this->ASSIGNMENTS = array_merge($controller->getAssignments(), $this->ASSIGNMENTS);
     }
+    protected function hasVariable($var) {
+        return isset($this->ASSIGNMENTS[$var]);
+    }
 
 }
 
