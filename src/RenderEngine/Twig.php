@@ -2,6 +2,8 @@
 
 namespace slc\MVC;
 
+use slc\twig_relative_directory\RelativePath;
+
 class RenderEngine_Twig extends RenderEngine {
 	protected $Twig = null;
 	protected function initialize() {
@@ -23,6 +25,9 @@ class RenderEngine_Twig extends RenderEngine {
 			$this->Twig->addExtension(new \Twig_Extensions_Extension_I18n());
 			$this->Twig->getExtension('core')->setNumberFormat(0, gettext('DECIMAL_SEPERATOR'), gettext('THOUSANDS_SEPERATOR'));
 		}
+        if(class_exists('slc\twig_relative_directory\RelativePath')) {
+            $this->Twig->addExtension(new RelativePath());
+        }
 	}
 	public function Fetch() {
 		try {

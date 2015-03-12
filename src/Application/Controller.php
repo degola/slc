@@ -43,6 +43,9 @@ class Application_Controller {
     protected function cleanAssignments() {
         $this->ASSIGNMENTS = array();
     }
+    public function getAssignments() {
+        return $this->ASSIGNMENTS;
+    }
 
 	protected function assign($key, $value) {
 		$this->ASSIGNMENTS[$key] = $value;
@@ -53,6 +56,9 @@ class Application_Controller {
 	protected function getFrameworkVars() {
 		return $this->FRAMEWORK;
 	}
+    public final function MergeAssignments(Application_Controller $controller) {
+        $this->ASSIGNMENTS = array_merge($controller->getAssignments(), $this->ASSIGNMENTS);
+    }
 
 }
 

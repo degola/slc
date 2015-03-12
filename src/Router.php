@@ -22,7 +22,7 @@ class Router {
 	protected function validateViewAccess(Router_Driver $Driver, Application_Controller $Controller, $View) {
 		$ProtectedViews = array(
 			'Render',
-			'MergeAssignements',
+			'MergeAssignments',
 			'__hasAccess'
 		);
 		if(!preg_match('/^([a-z0-9\_]{1,})$/i', $View->View))
@@ -57,10 +57,11 @@ class Router {
 		}
 
 		if(
-			is_a($Driver, 'Router_Driver_InternalRedirect') &&
+			$Driver instanceof Router_Driver_Redirect &&
 			is_object($PreviousController) &&
-			is_a($PreviousController, 'Application_Controller')) {
-			$controller->MergeAssignements($PreviousController);
+			$PreviousController instanceof Application_Controller
+        ) {
+			$controller->MergeAssignments($PreviousController);
 		}
 		$mView = $View->View;
 		if($controller->useHTTPRequestMethodInViewName() && isset($_SERVER['REQUEST_METHOD']))

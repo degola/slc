@@ -28,9 +28,11 @@ class Router_Driver {
 			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_ROUTE, array('Driver' => get_called_class(), 'QueryString' => $this->QueryString, 'StartRoute' => $this->StartRoute));
 	}
 	public static function Factory($QueryString, $Driver = null, $namespace = null) {
-		if(is_null($Driver)) {
+		if(is_null($Driver) && get_called_class() == 'slc\MVC\Router_Driver') {
 			$Driver = Base::Factory()->getConfig('Framework', 'DefaultRouterDriver');
-		}
+		} elseif(is_null($Driver)) {
+            $Driver = get_called_class();
+        }
 
 		if(is_null($Driver))
 			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_DRIVER, array('Driver' => $Driver, 'QueryString' => $QueryString));

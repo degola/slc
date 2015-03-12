@@ -10,6 +10,10 @@
 namespace slc\MVC;
 
 class Router_Driver_Redirect extends Router_Driver {
+    /**
+     * @var Router_Driver
+     */
+    private $originalRouter;
 	protected function parseRoute() {
 		$QueryString = $this->getQueryString();
 		if(isset($QueryString["View"])) {
@@ -26,6 +30,16 @@ class Router_Driver_Redirect extends Router_Driver {
 		}
 		return false;
 	}
+    public function setOriginalRouterDriver(Router_Driver $router) {
+        $this->originalRouter = $router;
+        return $this;
+    }
+    public function link($link, array $arguments = null, $includeDomain = false) {
+        if($this->originalRouter instanceof Router_Driver) {
+            return $this->originalRouter->link($link, $arguments, $includeDomain);
+        }
+        throw new Router_Driver_Exception('ORIGINAL_ROUTER_DRIVER_NOT_SET', array());
+    }
 }
 
 ?>
