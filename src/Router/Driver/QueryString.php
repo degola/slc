@@ -34,7 +34,7 @@ class Router_Driver_QueryString extends Router_Driver {
 	public function link($link, array $arguments = null, $includeDomain = false) {
 		$prefix = '';
 		if($includeDomain)
-			$prefix = (isset($_SERVER['SSL'])||isset($_SERVER['HTTPS'])?'https://':'http://').(isset($_SERVER['HOST'])?$_SERVER['HOST']:$_SERVER['HTTP_HOST']);
+			$prefix = ((isset($_SERVER['SSL'])&&$_SERVER['SSL'])||(isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS'])?'https://':'http://').(isset($_SERVER['HOST'])?$_SERVER['HOST']:$_SERVER['HTTP_HOST']);
 		$args = array();
 		if(is_array($arguments)) {
 			foreach ($arguments AS $key => $value) {
