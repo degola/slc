@@ -44,6 +44,12 @@ class Router_Driver_Shell extends Router_Driver {
 
 		return false;
 	}
+
+	public function link($link, array $arguments = null, $includeDomain = false) {
+		// use default router driver for link generation in dummy router
+		return Router_Driver::Factory(null, null)->link($link, $arguments, $includeDomain);
+	}
+
 }
 
 ?>

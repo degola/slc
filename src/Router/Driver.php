@@ -24,8 +24,8 @@ class Router_Driver {
 		} else {
 			$this->Namespace = $Namespace;
 		}
-		if($this->parseRoute() === false)
-			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_ROUTE, array('Driver' => get_called_class(), 'QueryString' => $this->QueryString, 'StartRoute' => $this->StartRoute));
+		if(!is_null($QueryString) && $this->parseRoute() === false)
+			throw new Router_Driver_Exception('INVALID_ROUTE', array('Driver' => get_called_class(), 'QueryString' => $this->QueryString, 'StartRoute' => $this->StartRoute));
 	}
 	public static function Factory($QueryString, $Driver = null, $namespace = null) {
 		if(is_null($Driver) && get_called_class() == 'slc\MVC\Router_Driver') {
@@ -35,7 +35,7 @@ class Router_Driver {
         }
 
 		if(is_null($Driver))
-			throw new Router_Driver_Exception(Router_Driver_Exception::INVALID_DRIVER, array('Driver' => $Driver, 'QueryString' => $QueryString));
+			throw new Router_Driver_Exception('INVALID_DRIVER', array('Driver' => $Driver, 'QueryString' => $QueryString));
 
 		return new $Driver($QueryString, $namespace);
 	}
