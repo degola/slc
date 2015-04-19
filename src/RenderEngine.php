@@ -12,7 +12,7 @@ abstract class RenderEngine {
 
 		$this->initialize();
 	}
-	protected final function getTemplateValues() {
+	public final function getTemplateValues() {
 		return array_merge(
 			array(
 				'Router' => $this->Router,
