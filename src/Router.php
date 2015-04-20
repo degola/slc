@@ -10,14 +10,20 @@
 namespace slc\MVC;
 
 class Router {
-	static private $__OWN_OBJECT = null;
+	static private $__OWN_OBJECT = array();
 	private $Hooks = array(
-		'onBeforeExecute' => array()
+		'onBeforeExecute' => array(),
+		'onBeforeLink' => array()
 	);
+
+	/**
+	 * @return Router
+	 */
 	public static function Factory() {
-		if(is_null(static::$__OWN_OBJECT))
-			static::$__OWN_OBJECT = new self();
-		return static::$__OWN_OBJECT;
+		$cls = get_called_class();
+		if(!isset(static::$__OWN_OBJECT[$cls]))
+			static::$__OWN_OBJECT[$cls] = new $cls();
+		return static::$__OWN_OBJECT[$cls];
 	}
 	protected function validateViewAccess(Router_Driver $Driver, Application_Controller $Controller, $View) {
 		$ProtectedViews = array(
@@ -45,6 +51,12 @@ class Router {
 	public final function deleteHook($type, $id) {
 		unset($this->Hooks[$type][$id]);
 	}
+	public final function getHooks($type) {
+		if(isset($this->Hooks[$type]) && is_array($this->Hooks[$type])) {
+			return $this->Hooks[$type];
+		}
+		return array();
+	}
 	public function Execute(Router_Driver $Driver, $PreviousController = null) {
 		$controller = $Driver->getControllerInstance();
 		$View = $Driver->getView();
@@ -52,7 +64,7 @@ class Router {
 		
 		$this->validateViewAccess($Driver, $controller, $View);
 
-		foreach($this->Hooks['onBeforeExecute'] AS $hookId => $hookFunction) {
+		foreach($this->getHooks('onBeforeExecute') AS $hookId => $hookFunction) {
 			$hookFunction($Driver);
 		}
 

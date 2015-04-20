@@ -37,6 +37,9 @@
 			return false;
 		}
 		public function link($link, array $arguments = null, $includeDomain = false) {
+			foreach(Router::Factory()->getHooks('onBeforeLink') AS $hookId => $hookFunction) {
+				$link = $hookFunction($link, $arguments, $includeDomain);
+			}
 			$prefix = '';
 			if($includeDomain)
 				$prefix = ((isset($_SERVER['SSL'])&&$_SERVER['SSL'])||(isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS'])?'https://':'http://').(isset($_SERVER['HOST'])?$_SERVER['HOST']:$_SERVER['HTTP_HOST']);
