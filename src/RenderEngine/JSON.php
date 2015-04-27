@@ -11,6 +11,9 @@ class RenderEngine_JSON extends RenderEngine {
 			$this->SignatureHashAlgo = Base::Factory()->getConfig('RenderEngine_JSON', 'SignatureAlgo');
 	}
 	public function Fetch() {
+		if(!headers_sent()) {
+			header('Content-Type: application/json');
+		}
 		$Data = $this->getTemplateValues();
 		unset($Data['Router']);
 		unset($Data['Controller']);
@@ -23,7 +26,6 @@ class RenderEngine_JSON extends RenderEngine {
 		);
 		return json_encode($Data);
 	}
-
 }
 
 ?>
