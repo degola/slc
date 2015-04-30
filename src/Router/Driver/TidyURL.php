@@ -17,8 +17,8 @@
 				$regex = '/^'.addcslashes(dirname($scriptName), '+-.,[]/\\').'/';
 				$queryString = preg_replace($regex, '', $queryString);
 			}
-			if(Base::Factory()->getConfig('Application', 'TruncateRoutingPath')) {
-				$regex = '/^'.addcslashes(dirname($scriptName), '+-.,[]/\\').'/';
+			if(($truncateRoutingPath = Base::Factory()->getConfig('Application', 'TruncateRoutingPath'))) {
+				$regex = '/^'.addcslashes($truncateRoutingPath, '+-.,[]/\\').'/';
 				$queryString = preg_replace($regex, '', $queryString);
 			}
 			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $queryString, $matchResult)) {
