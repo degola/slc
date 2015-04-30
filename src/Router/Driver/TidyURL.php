@@ -13,7 +13,12 @@
 		protected function parseRoute() {
 			$queryString = $this->getQueryString();
 			if($_SERVER['SCRIPT_NAME'] != '/') {
-				$regex = '/^'.addcslashes(dirname($_SERVER['SCRIPT_NAME']), '+-.,[]/\\').'/';
+				$scriptName = $_SERVER['SCRIPT_NAME'];
+				$regex = '/^'.addcslashes(dirname($scriptName), '+-.,[]/\\').'/';
+				$queryString = preg_replace($regex, '', $queryString);
+			}
+			if(Base::Factory()->getConfig('Application', 'TruncateRoutingPath')) {
+				$regex = '/^'.addcslashes(dirname($scriptName), '+-.,[]/\\').'/';
 				$queryString = preg_replace($regex, '', $queryString);
 			}
 			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $queryString, $matchResult)) {
