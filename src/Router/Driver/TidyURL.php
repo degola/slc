@@ -11,7 +11,12 @@
 
 	class Router_Driver_TidyURL extends Router_Driver {
 		protected function parseRoute() {
-			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $this->getQueryString(), $matchResult)) {
+			$queryString = $this->getQueryString();
+			if($_SERVER['SCRIPT_NAME'] != '/') {
+				$regex = '/^'.addcslashes(dirname($_SERVER['SCRIPT_NAME']), '+-.,[]/\\').'/';
+				$queryString = preg_replace($regex, '', $queryString);
+			}
+			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $queryString, $matchResult)) {
 				$arguments = array_pop($matchResult);
 				$QueryStringArray = array();
 				parse_str($arguments, $QueryStringArray);
