@@ -21,7 +21,7 @@
 				$regex = '/^'.addcslashes($truncateRoutingPath, '+-.,[]/\\').'/';
 				$queryString = preg_replace($regex, '', $queryString);
 			}
-			if(preg_match('/^([a-zA-Z0-9\/\-_]{1,})(|\?(.*))$/', $queryString, $matchResult)) {
+			if(preg_match('/^([a-zA-Z0-9\/\-_]*)(|\?(.*))$/', $queryString, $matchResult)) {
 				$arguments = array_pop($matchResult);
 				$QueryStringArray = array();
 				parse_str($arguments, $QueryStringArray);
