@@ -79,14 +79,14 @@ class Router {
 		if($controller->useHTTPRequestMethodInViewName() && isset($_SERVER['REQUEST_METHOD']))
 			$mView = strtoupper($_SERVER['REQUEST_METHOD']).'_'.$mView;
 
-		if(method_exists($controller, $mView)) {
-			if(method_exists($controller, '__before')) {
-				$beforeResult = $controller->__before($Driver->getViewArguments());
-				if(is_subclass_of($beforeResult, 'slc\\MVC\\Router_Driver')) {
-					return $this->Execute($beforeResult, $controller);
-				}
-				unset($beforeResult);
+		if(method_exists($controller, '__before')) {
+			$beforeResult = $controller->__before($Driver->getViewArguments());
+			if(is_subclass_of($beforeResult, 'slc\\MVC\\Router_Driver')) {
+				return $this->Execute($beforeResult, $controller);
 			}
+			unset($beforeResult);
+		}
+		if(method_exists($controller, $mView)) {
 
 			$result = $controller->$mView($Driver->getViewArguments());
 
