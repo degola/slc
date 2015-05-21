@@ -29,6 +29,9 @@ class RenderEngine_Twig extends RenderEngine {
             $this->Twig->addExtension(new RelativePath());
         }
 	}
+	public function getInstance() {
+		return $this->Twig;
+	}
 	public function Fetch() {
 		try {
 			return $this->Twig->render(
