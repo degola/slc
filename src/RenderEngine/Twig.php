@@ -2,6 +2,7 @@
 
 namespace slc\MVC;
 
+use slc\twig_currency_symbols\ReplaceCurrencySymbol;
 use slc\twig_relative_directory\RelativePath;
 
 class RenderEngine_Twig extends RenderEngine {
@@ -28,6 +29,9 @@ class RenderEngine_Twig extends RenderEngine {
         if(class_exists('slc\twig_relative_directory\RelativePath')) {
             $this->Twig->addExtension(new RelativePath());
         }
+		if(class_exists('slc\twig_currency_symbols\ReplaceCurrencySymbol')) {
+			$this->Twig->addExtension(new ReplaceCurrencySymbol());
+		}
 	}
 	public function getInstance() {
 		return $this->Twig;
