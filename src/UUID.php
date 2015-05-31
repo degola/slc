@@ -36,20 +36,25 @@ class UUID {
 
 	protected static function clientIPToHex($ip = null) {
 		$hex = "";
-		if(!$ip) $ip=getEnv("REMOTE_ADDR");
-		if(!$ip) $ip = getEnv('SERVER_ADDR');
-		if(!$ip) {
-			if(!isset($_SERVER['REMOTE_ADDR']))
-				$ip = gethostbyname(gethostname());
-			if(!$ip)
-				$ip = '0.0.0.0';
-		}
+		$ip = static::getIp();
 
 		$part=explode('.', $ip);
 		for ($i=0; $i<=count($part)-1; $i++) {
 			$hex.=substr("0".dechex($part[$i]),-2);
 		}
 		return $hex;
+	}
+	protected static function getIp() {
+		if(isset($_SERVER['HTTP_X_REAL_IP'])) {
+			return $_SERVER['HTTP_X_REAL_IP'];
+		}
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			return $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		if(isset($_SERVER['REMOTE_ADDR'])) {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+		return '0.0.0.0';
 	}
 
 	protected static function clientIPFromHex($hex) {
