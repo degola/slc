@@ -12,6 +12,7 @@ namespace slc\MVC;
 class Router_Driver {
 	protected $QueryString = null;
 	protected $StartRoute = null;
+	protected $CurrentRoute = null;
 	protected $Controller = null;
 	protected $View = null;
 	protected $ViewArguments = null;
@@ -66,6 +67,9 @@ class Router_Driver {
 	public function getViewArguments() {
 		return $this->ViewArguments;
 	}
+	public function getCurrentRoute() {
+		return $this->CurrentRoute;
+	}
 	protected function findControllerAndViewByRouteString($string, $prefix = 'Controller') {
 
 		$stringArray = explode('::', $string);
@@ -85,7 +89,7 @@ class Router_Driver {
 					array_pop($remainingElements);
 				}
 				rsort($remainingElements);
-				return (object)array(
+				$result = (object)array(
 					'Class' => $class,
 					'ViewPath' => implode('::', $stringArray),
 					'FilePath' => $fn,
@@ -96,6 +100,8 @@ class Router_Driver {
 						)
 					)
 				);
+				$this->CurrentRoute = $result->ViewPath.'::'.$result->View;
+				return $result;
 			} else {
 				$lastElement = array_pop($stringArray);
 				$remainingElements[] = $lastElement;
