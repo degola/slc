@@ -108,11 +108,11 @@ class SimpleMail
 	public function setTo($email, $name)
 	{
 		if (! is_string($email)) {
-			throw new \InvalidArgumentException('$email must be a string');
+			throw new \InvalidArgumentException('$email must be a string, was '.print_r($email, true));
 		}
 
 		if (! is_string($name)) {
-			throw new \InvalidArgumentException('$name must be a string.');
+			throw new \InvalidArgumentException('$name must be a string, was '.print_r($email, true));
 		}
 
 		$this->_to[] = $this->formatHeader($email, $name);
