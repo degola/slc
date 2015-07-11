@@ -24,6 +24,9 @@ require_once BASE_LIB.'Gelf/MessagePublisher.php';
 
 namespace slc\MVC;
 
+use Monolog\Formatter\LogstashFormatter;
+use Monolog\Handler\StreamHandler;
+
 class Logger extends \Monolog\Logger {
     protected static $LogObjects = array();
     protected $ConfigData = null;
@@ -61,6 +64,7 @@ class Logger extends \Monolog\Logger {
 					case 'ChromePHP':
 						$handler = new \Monolog\Handler\ChromePHPHandler();
 						break;
+					case 'Logstash':
 					case 'Graylog':
 						if(isset($Config->Host))
 							$handler = new \Monolog\Handler\GelfHandler(new \Gelf\Publisher(new \Gelf\Transport\UdpTransport($Config->Host, isset($Config->Port)?$Config->Port:\Gelf\Transport\UdpTransport::DEFAULT_PORT)), constant('Monolog\Logger::'.$Config->Severity));
