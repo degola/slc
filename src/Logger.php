@@ -24,7 +24,10 @@ require_once BASE_LIB.'Gelf/MessagePublisher.php';
 
 namespace slc\MVC;
 
+use Bankiru\MonologLogstash\LumberjackFormatter;
+use Bankiru\MonologLogstash\LumberjackHandler;
 use Monolog\Formatter\LogstashFormatter;
+use Monolog\Handler\SocketHandler;
 use Monolog\Handler\StreamHandler;
 
 class Logger extends \Monolog\Logger {
@@ -65,6 +68,25 @@ class Logger extends \Monolog\Logger {
 						$handler = new \Monolog\Handler\ChromePHPHandler();
 						break;
 					case 'Logstash':
+                        if(isset($Config->Host) && isset($Config->CertificatePath)) {
+                            $handler = new LumberjackHandler(Logger::INFO, true);
+                            $handler->init(
+                                $Config->Host,
+                                (isset($Config->Port) ? $Config->Port : 5000),
+                                $Config->CertificatePath,
+                                [
+                                    'window_size' => 5000,
+                                ]
+                            );
+                            $handler->setFormatter(
+                                new LumberjackFormatter(
+                                    Base::Factory()->getConfig('Application', 'Name')
+                                )
+                            );
+                        } else {
+                            throw new Logger_Exception('INVALID_TYPE_CONFIG', array('Type' => $Config->Type));
+                        }
+                        break;
 					case 'Graylog':
 						if(isset($Config->Host))
 							$handler = new \Monolog\Handler\GelfHandler(new \Gelf\Publisher(new \Gelf\Transport\UdpTransport($Config->Host, isset($Config->Port)?$Config->Port:\Gelf\Transport\UdpTransport::DEFAULT_PORT)), constant('Monolog\Logger::'.$Config->Severity));
