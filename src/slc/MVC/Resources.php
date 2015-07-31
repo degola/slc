@@ -8,11 +8,9 @@
 
 namespace slc\MVC;
 
-use slc\MVC\Logger;
-
 class Resources {
 	private static $ResourceInstances = array();
-	public static function Factory($Type, $Id, Logger $logger = null)
+	public static function Factory($Type, $Id, $logger = null)
     {
         if (!isset(static::$ResourceInstances[$Type][$Id])) {
             Base::Factory()->importFile(array('Resources::'.$Type));
