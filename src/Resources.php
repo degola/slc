@@ -17,7 +17,7 @@ class Resources {
         if (!isset(static::$ResourceInstances[$Type][$Id])) {
             Base::Factory()->importFile(array('Resources::'.$Type));
 			$cls = 'slc\MVC\Resources\\' . $Type;
-            static::$ResourceInstances[$Type][$Id] = new $cls($Id);
+            static::$ResourceInstances[$Type][$Id] = new $cls($Id, $logger);
         }
         if (method_exists(static::$ResourceInstances[$Type][$Id], 'setLogger')) {
             static::$ResourceInstances[$Type][$Id]->setLogger($logger);
