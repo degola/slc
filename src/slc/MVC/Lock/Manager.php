@@ -11,7 +11,7 @@ namespace slc\MVC;
  */
 
 class Lock_Manager {
-	const DEBUG = true;
+	const DEBUG = false;
 
 	/**
 	 * the type of locks
