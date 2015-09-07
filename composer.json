@@ -1,6 +1,6 @@
 {
     "name": "slc/MVC",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Simple and fast PHP MVC framework",
     "keywords": ["mvc"],
     "homepage": "http://github.com/Degola/slc",
