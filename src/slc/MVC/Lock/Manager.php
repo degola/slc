@@ -142,7 +142,6 @@ class Lock_Manager {
 				$Lock->AvailableUntil - time()
 			) === true) {
 			$this->Locks[$this->LockType.'::'.$Lock->Id] = $Lock;
-			\slc\MVC\Debug::Write('acquired lock: '.'LOCK_MANAGER::'.$Lock->Hash.'"', null, \slc\MVC\Debug::MESSAGE_NEWLINE_BEGIN + \slc\MVC\Debug::MESSAGE_NEWLINE_END, 0, __CLASS__);
 			return true;
 		}
 		if($iteration <= 10)
@@ -151,7 +150,6 @@ class Lock_Manager {
 			usleep(5000);
 			return $this->acquireLock($Lock, $Tries, ++$iteration);
 		}
-		\slc\MVC\Debug::Write('lock not acquired: '.'LOCK_MANAGER::'.$Lock->Hash.'"', null, \slc\MVC\Debug::MESSAGE_NEWLINE_BEGIN + \slc\MVC\Debug::MESSAGE_NEWLINE_END, 0, __CLASS__);
 		return false;
 	}
 
@@ -172,7 +170,6 @@ class Lock_Manager {
 			$result = $this->Connection->delete('LOCK_MANAGER::'.$Lock->Hash);
 			if($ThrowExceptionOnError === false || $result === true) {
 				unset($this->Locks[$this->LockType.'::'.$Lock->Id]);
-				\slc\MVC\Debug::Write('lock deleted: '.'LOCK_MANAGER::'.$Lock->Hash.'"', null, \slc\MVC\Debug::MESSAGE_NEWLINE_BEGIN + \slc\MVC\Debug::MESSAGE_NEWLINE_END, 0, __CLASS__);
 			} else
 				throw new Lock_Manager_Exception('LOCK_NOT_DELETED', array('LockId', $LockId, 'LockType' => $this->LockType));
 		} else if($ThrowExceptionOnError === true)
