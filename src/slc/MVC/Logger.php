@@ -68,23 +68,12 @@ class Logger extends \Monolog\Logger {
 						$handler = new \Monolog\Handler\ChromePHPHandler();
 						break;
 					case 'Logstash':
-                        if(isset($Config->Host) && isset($Config->CertificatePath)) {
-                            $handler = new LumberjackHandler(Logger::INFO, true);
-                            $handler->init(
-                                $Config->Host,
-                                (isset($Config->Port) ? $Config->Port : 5000),
-                                $Config->CertificatePath,
-                                [
-                                    'window_size' => 5000,
-                                ]
-                            );
-                            $handler->setFormatter(
-                                new LumberjackFormatter(
-                                    Base::Factory()->getConfig('Application', 'Name')
-                                )
-                            );
+                        if(isset($Config->Host) && isset($Config->Port) && isset($Config->Severity)) {
+                            $handler = new SocketHandler($Config->Host.':'.$Config->Port, $Config->Severity);
+                            $formatter = new LogstashFormatter($this->getName());
+                            $handler->setFormatter($formatter);
                         } else {
-                            throw new Logger_Exception('INVALID_TYPE_CONFIG', array('Type' => $Config->Type));
+                            throw new Logger_Exception('INVALID_TYPE_CONFIG', array('Type' => $Config->Type, 'Config' => $Config));
                         }
                         break;
 					case 'Graylog':
